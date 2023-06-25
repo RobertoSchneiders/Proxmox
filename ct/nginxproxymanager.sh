@@ -57,9 +57,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -s https://api.github.com/repos/NginxProxyManager/nginx-proxy-manager/releases/latest |
-    grep "tag_name" |
-    awk '{print substr($2, 3, length($2)-4) }')
+  RELEASE="2.9.22"
   msg_info "Stopping Services"
   systemctl stop openresty
   systemctl stop npm
@@ -70,7 +68,7 @@ function update_script() {
     /var/www/html \
     /etc/nginx \
     /var/log/nginx \
-    /var/lib/nginx \
+    /var/lib/nginx \.
     /var/cache/nginx &>/dev/null
   msg_ok "Cleaned Old Files"
 
@@ -128,7 +126,7 @@ function update_script() {
   wget -q "https://github.com/just-containers/s6-overlay/releases/download/v3.1.5.0/s6-overlay-x86_64.tar.xz"
   tar -C / -Jxpf s6-overlay-noarch.tar.xz
   tar -C / -Jxpf s6-overlay-x86_64.tar.xz
-
+  python3 -m pip install --no-cache-dir certbot-dns-cloudflare &>/dev/null
   msg_ok "Setup Enviroment"
 
   msg_info "Building Frontend"
